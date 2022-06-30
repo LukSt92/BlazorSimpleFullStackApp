@@ -1,0 +1,49 @@
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
+namespace BlazorSimpleFullStackApp.Server.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class SuperHeroController : ControllerBase
+    {
+        public static List<Comic> Comics = new List<Comic> {
+        new Comic { Id = 1, Name = "Marvel"},
+        new Comic { Id = 2, Name = "DC"}
+        };
+
+        public static List<SuperHero> Heroes = new List<SuperHero> {
+        new SuperHero {
+            Id = 1,
+            FirstName = "Peter",
+            LastName = "Parker",
+            HeroName = "Spiderman",
+            Comic = Comics[0]
+            },
+        new SuperHero {
+            Id = 2,
+            FirstName = "Bruce",
+            LastName = "Wayne",
+            HeroName = "Batman",
+            Comic = Comics[1]
+            },
+        };
+
+        [HttpGet]
+        public async Task<ActionResult<List<SuperHero>>> GetSuperHeroes()
+        {
+            return Ok(Heroes);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<SuperHero>> GetSingleHero(int id)
+        {
+            var hero = Heroes.FirstOrDefault(x => x.Id == id);
+            if (hero == null)
+            {
+                return NotFound("Sorry, no hero here.");
+            }
+            return Ok(Heroes);
+        }
+    }
+}
